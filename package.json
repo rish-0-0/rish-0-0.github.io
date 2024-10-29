@@ -1,0 +1,41 @@
+{
+  "name": "rish-0-0.github.io",
+  "version": "1.0.0",
+  "description": "This is my Blog Now",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run storybook",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build -o docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rish-0-0/rish-0-0.github.io.git"
+  },
+  "keywords": [
+    "storybook",
+    "typescript",
+    "blog"
+  ],
+  "author": "Rishabh Anand",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rish-0-0/rish-0-0.github.io/issues"
+  },
+  "homepage": "https://github.com/rish-0-0/rish-0-0.github.io#readme",
+  "devDependencies": {
+    "@chromatic-com/storybook": "^1.9.0",
+    "@storybook/addon-essentials": "^8.3.6",
+    "@storybook/addon-interactions": "^8.3.6",
+    "@storybook/addon-links": "^8.3.6",
+    "@storybook/addon-onboarding": "^8.3.6",
+    "@storybook/blocks": "^8.3.6",
+    "@storybook/manager-api": "^8.3.6",
+    "@storybook/react": "^8.3.6",
+    "@storybook/react-vite": "^8.3.6",
+    "@storybook/test": "^8.3.6",
+    "@storybook/theming": "^8.3.6",
+    "prop-types": "^15.8.1",
+    "storybook": "^8.3.6"
+  }
+}
