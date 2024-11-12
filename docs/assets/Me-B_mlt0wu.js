@@ -2,6 +2,7 @@ import{j as e}from"./jsx-runtime-DEdD30eg.js";import{useMDXComponents as i}from"
 `,e.jsx(n.p,{children:"Software developer from Bangalore. Graduated with Computer Science '21 from BITS Pilani, Goa. Believe in the power of education and a big fan of opensource development."}),`
 `,e.jsx("a",{href:"https://www.linkedin.com/in/rish-0-0",rel:"nofollow noreferrer",children:e.jsx("img",{src:"https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white"})}),`
 `,e.jsx("a",{href:"https://leetcode.com/u/rish-0-0/",rel:"nofollow noreferrer",children:e.jsx("img",{src:"https://img.shields.io/badge/-LeetCode-FFA116?style=for-the-badge&logo=LeetCode&logoColor=black"})}),`
+`,e.jsx("a",{href:"https://github.com/rish-0-0",rel:"nofollow noreferrer",children:e.jsx("img",{src:"https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"})}),`
 `,e.jsx(n.h2,{id:"my-npm-packages",children:"My NPM Packages"}),`
 `,e.jsx(n.h3,{id:"neo-flow-viz",children:"Neo-Flow-Viz"}),`
 `,e.jsx(n.p,{children:"It is a Neo4j Graph visualization Library for React Projects, written in Typescript. It uses ReactFlow as the underlying Graph Library and the response and Query Format it builds on is for Neo4j."}),`
