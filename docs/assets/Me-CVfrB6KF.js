@@ -7,7 +7,7 @@ import{j as e}from"./jsx-runtime-DEdD30eg.js";import{useMDXComponents as o}from"
 `,e.jsx(n.p,{children:"It is a Neo4j Graph visualization Library for React Projects, written in Typescript. It uses ReactFlow as the underlying Graph Library and the response and Query Format it builds on is for Neo4j."}),`
 `,e.jsx(n.pre,{children:e.jsx(n.code,{className:"language-bash",children:`npm install --save neo-flow-viz
 `})}),`
-`,e.jsx(n.h3,{id:"planets",children:e.jsx(n.a,{href:"https://rishabh-anand.com/rish-0-0",rel:"nofollow",children:"Planets"})}),`
+`,e.jsx(n.h3,{id:"planets",children:e.jsx(n.a,{href:"https://rishabh-anand.com/rish-0-0/planets",rel:"nofollow",children:"Planets"})}),`
 `,e.jsx(n.p,{children:"ThreeJS simulation of 3-body problem"}),`
 `,e.jsx(n.pre,{children:e.jsx(n.code,{className:"language-bash",children:`npm install --save astroreha
 `})}),`
