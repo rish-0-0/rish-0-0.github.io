@@ -1,0 +1,140 @@
+@use 'sass:map';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// THEME PALETTE DEFINITIONS
+//
+// Each key becomes a CSS custom property: (bg: #0d0f10) → --bg: #0d0f10
+//
+// To add a theme:   add a new entry to $themes.
+// To add a token:   add the key to every theme entry (dark is the reference).
+// To change a value: edit the value in the relevant theme entry only.
+// ─────────────────────────────────────────────────────────────────────────────
+
+$themes: (
+  dark: (
+    bg:              #0d0f10,
+    bg-elevated:     #161b22,
+    surface:         #1c2128,
+    surface-raised:  #22272e,
+    border:          #30363d,
+    fg:              #e6edf3,
+    fg-muted:        #8b949e,
+    fg-subtle:       #484f58,
+    accent:          #2f81f7,
+    accent-fg:       #ffffff,
+    sidebar-bg:      #0d1117,
+    sidebar-hover:   #161b22,
+    sidebar-active:  #1c2128,
+    input-bg:        #161b22,
+    input-border:    #30363d,
+    pill-bg:         #1c2128,
+    pill-border:     #30363d,
+    scrollbar:       #30363d,
+    shadow:          '0 0 0 1px #30363d, 0 8px 32px rgb(0 0 0 / .5)',
+    shadow-sm:       '0 0 0 1px #30363d',
+    prose-heading:   #e6edf3,
+    prose-quote-bg:  #161b22,
+    prose-quote-bar: #2f81f7,
+  ),
+
+  light: (
+    bg:              #ffffff,
+    bg-elevated:     #f6f8fa,
+    surface:         #ffffff,
+    surface-raised:  #f6f8fa,
+    border:          #d0d7de,
+    fg:              #1f2328,
+    fg-muted:        #636c76,
+    fg-subtle:       #9198a1,
+    accent:          #0969da,
+    accent-fg:       #ffffff,
+    sidebar-bg:      #f6f8fa,
+    sidebar-hover:   #eaf5ff,
+    sidebar-active:  #ddf4ff,
+    input-bg:        #ffffff,
+    input-border:    #d0d7de,
+    pill-bg:         #f6f8fa,
+    pill-border:     #d0d7de,
+    scrollbar:       #d0d7de,
+    shadow:          '0 0 0 1px #d0d7de, 0 8px 32px rgb(0 0 0 / .08)',
+    shadow-sm:       '0 0 0 1px #d0d7de',
+    prose-heading:   #1f2328,
+    prose-quote-bg:  #f6f8fa,
+    prose-quote-bar: #0969da,
+  ),
+
+  solarized: (
+    bg:              #1a1108,
+    bg-elevated:     #221607,
+    surface:         #2a1f0c,
+    surface-raised:  #32260f,
+    border:          #4d3a1e,
+    fg:              #d4a96a,
+    fg-muted:        #8a6840,
+    fg-subtle:       #5c4428,
+    accent:          #c97b30,
+    accent-fg:       #1a1108,
+    sidebar-bg:      #110c05,
+    sidebar-hover:   #221607,
+    sidebar-active:  #2a1f0c,
+    input-bg:        #221607,
+    input-border:    #4d3a1e,
+    pill-bg:         #2a1f0c,
+    pill-border:     #4d3a1e,
+    scrollbar:       #4d3a1e,
+    shadow:          '0 0 0 1px #4d3a1e, 0 8px 32px rgb(0 0 0 / .7)',
+    shadow-sm:       '0 0 0 1px #4d3a1e',
+    prose-heading:   #e8c07a,
+    prose-quote-bg:  #221607,
+    prose-quote-bar: #c97b30,
+  ),
+
+  aderberry: (
+    bg:              #002b36,
+    bg-elevated:     #073642,
+    surface:         #073642,
+    surface-raised:  #0a4455,
+    border:          #1d5263,
+    fg:              #839496,
+    fg-muted:        #657b83,
+    fg-subtle:       #4a6a73,
+    accent:          #268bd2,
+    accent-fg:       #fdf6e3,
+    sidebar-bg:      #001e26,
+    sidebar-hover:   #042d38,
+    sidebar-active:  #073642,
+    input-bg:        #073642,
+    input-border:    #1d5263,
+    pill-bg:         #073642,
+    pill-border:     #1d5263,
+    scrollbar:       #1d5263,
+    shadow:          '0 0 0 1px #1d5263, 0 8px 32px rgb(0 0 0 / .6)',
+    shadow-sm:       '0 0 0 1px #1d5263',
+    prose-heading:   #93a1a1,
+    prose-quote-bg:  #073642,
+    prose-quote-bar: #268bd2,
+  ),
+);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// GENERATOR — do not edit below this line
+// Emits [data-theme="X"] { --key: value; } for every theme in $themes.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// dark is also the :root default (FOUC-safe before JS sets data-theme)
+:root,
+[data-theme='dark'] {
+  @each $key, $value in map.get($themes, dark) {
+    --#{$key}: #{$value};
+  }
+}
+
+@each $name, $tokens in $themes {
+  @if $name != dark {
+    [data-theme='#{$name}'] {
+      @each $key, $value in $tokens {
+        --#{$key}: #{$value};
+      }
+    }
+  }
+}

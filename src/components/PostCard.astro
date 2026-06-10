@@ -1,0 +1,49 @@
+---
+export interface Props {
+  href: string;
+  title: string;
+  description: string;
+  pubDate: Date;
+  tags?: string[];
+  /** Show only month+year instead of day+month+year */
+  shortDate?: boolean;
+  /** Optional live-site URL — renders an external link badge */
+  liveUrl?: string;
+}
+
+const { href, title, description, pubDate, tags, shortDate = false, liveUrl } = Astro.props;
+
+const dateStr = pubDate.toLocaleDateString('en-GB', shortDate
+  ? { year: 'numeric', month: 'short' }
+  : { year: 'numeric', month: 'short', day: 'numeric' }
+);
+---
+
+<a
+  href={href}
+  class="block rounded-xl border border-border bg-surface p-5 no-underline transition-all hover:border-fg-subtle hover:bg-surface-raised hover:shadow-[var(--shadow)]"
+>
+  <div class="mb-2 flex flex-wrap items-center gap-2 text-[0.8125rem] text-fg-muted">
+    <time datetime={pubDate.toISOString()}>{dateStr}</time>
+    {tags?.slice(0, 3).map((tag) => (
+      <span class="rounded-full border border-border bg-bg-elevated px-2 py-px text-[0.6875rem] font-semibold uppercase tracking-wide text-fg-subtle">
+        {tag}
+      </span>
+    ))}
+  </div>
+
+  <h2 class="font-heading mb-1.5 text-lg font-semibold leading-snug tracking-tight text-fg">
+    {title}
+  </h2>
+
+  <p class="text-sm leading-relaxed text-fg-muted">{description}</p>
+
+  {liveUrl && (
+    <span class="mt-3 inline-flex items-center gap-1.5 text-[0.8125rem] font-medium text-accent">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+        <path d="M1 11L11 1M11 1H5M11 1v6"/>
+      </svg>
+      Live site
+    </span>
+  )}
+</a>

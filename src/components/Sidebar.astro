@@ -1,0 +1,111 @@
+---
+const currentPath = Astro.url.pathname;
+
+const navItems = [
+  {
+    href: '/blog',
+    label: 'Blog',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" width="16" height="16"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h7A2.5 2.5 0 0 1 14 2.5v11a2.5 2.5 0 0 1-2.5 2.5h-7A2.5 2.5 0 0 1 2 13.5Zm2.5-1a1 1 0 0 0-1 1V13.5a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V2.5a1 1 0 0 0-1-1ZM5 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5Zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5Zm0 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5Z"/></svg>`,
+  },
+  {
+    href: '/work',
+    label: 'Work',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" width="16" height="16"><path d="M0 12.5A1.5 1.5 0 0 0 1.5 14h13A1.5 1.5 0 0 0 16 12.5V6.5A1.5 1.5 0 0 0 14.5 5H12V3.5A1.5 1.5 0 0 0 10.5 2h-5A1.5 1.5 0 0 0 4 3.5V5H1.5A1.5 1.5 0 0 0 0 6.5Zm1.5-1H4v1H1.5a.5.5 0 0 1-.5-.5V6.5a.5.5 0 0 1 .5-.5H4v1H1.5Zm1-7a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 .5.5V5H5V3.5ZM5 6h6v1.5H5Zm6 1.5h3.5a.5.5 0 0 1 .5.5v5.5a.5.5 0 0 1-.5.5H12v-1h2.5V8H12V6.5Zm-1 7H5v-1h5Zm0-2H5V11h5Z"/></svg>`,
+  },
+  {
+    href: '/about',
+    label: 'About',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" width="16" height="16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m5.5-2a2.5 2.5 0 1 0 5 0 2.5 2.5 0 0 0-5 0M8 14.5a6.47 6.47 0 0 0 4.168-1.516 3.99 3.99 0 0 0-1.52-.735 5.5 5.5 0 0 1-5.296 0 3.99 3.99 0 0 0-1.52.735A6.47 6.47 0 0 0 8 14.5"/></svg>`,
+  },
+  {
+    href: '/contact',
+    label: 'Contact',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" width="16" height="16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/></svg>`,
+  },
+];
+---
+
+<aside
+  id="sidebar"
+  class="sidebar w-[260px] shrink-0 flex flex-col overflow-hidden z-40 bg-sidebar-bg border-r border-border"
+  aria-label="Site navigation"
+>
+  <!-- Header -->
+  <div class="sidebar-header h-[57px] flex items-center justify-between shrink-0 px-3 pl-4 border-b border-border gap-2">
+    <a href="/" class="sidebar-logo flex items-center gap-2.5 min-w-0 flex-1 no-underline text-fg">
+      <div class="w-8 h-8 rounded-lg bg-accent text-accent-fg flex items-center justify-center font-heading font-bold text-sm shrink-0">
+        R
+      </div>
+      <span class="sidebar-logo-name font-heading font-semibold text-[0.9375rem] tracking-tight overflow-hidden whitespace-nowrap">
+        Rishabh Anand
+      </span>
+    </a>
+
+    <button
+      id="sidebar-collapse-btn"
+      class="sidebar-collapse-btn flex items-center justify-center w-7 h-7 rounded-md border-none bg-transparent text-fg-subtle shrink-0 hover:bg-sidebar-hover hover:text-fg transition-colors"
+      aria-label="Collapse sidebar"
+    >
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M10 3L5 8l5 5"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Nav -->
+  <nav class="sidebar-nav flex-1 p-2 overflow-y-auto overflow-x-hidden" aria-label="Main navigation">
+    <div class="sidebar-section-label text-[0.6875rem] font-semibold tracking-widest uppercase text-fg-subtle px-2 pt-2 pb-1 whitespace-nowrap">
+      Explore
+    </div>
+
+    {navItems.map((item) => (
+      <a
+        href={item.href}
+        class={`sidebar-nav-item flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm font-medium no-underline whitespace-nowrap transition-colors ${
+          currentPath.startsWith(item.href)
+            ? 'bg-sidebar-active text-fg'
+            : 'text-fg-muted hover:bg-sidebar-hover hover:text-fg'
+        }`}
+        aria-current={currentPath.startsWith(item.href) ? 'page' : undefined}
+        data-label={item.label}
+      >
+        <span class="flex items-center shrink-0 opacity-70" aria-hidden="true" set:html={item.icon} />
+        <span class="sidebar-nav-label">{item.label}</span>
+      </a>
+    ))}
+  </nav>
+</aside>
+
+<!-- Mobile overlay -->
+<div id="sidebar-overlay" class="hidden fixed inset-0 bg-black/50 z-30" aria-hidden="true"></div>
+
+<script>
+  const STORAGE_KEY = 'portfolio-sidebar-collapsed';
+  const sidebar     = document.getElementById('sidebar') as HTMLElement;
+  const overlay     = document.getElementById('sidebar-overlay') as HTMLElement;
+  const collapseBtn = document.getElementById('sidebar-collapse-btn');
+  const menuToggle  = document.getElementById('menu-toggle');
+
+  function applyCollapsed(collapsed: boolean, animate = true) {
+    if (!animate) sidebar.style.transition = 'none';
+    sidebar.setAttribute('data-collapsed', String(collapsed));
+    collapseBtn?.setAttribute('aria-label', collapsed ? 'Expand sidebar' : 'Collapse sidebar');
+    if (!animate) requestAnimationFrame(() => (sidebar.style.transition = ''));
+  }
+
+  applyCollapsed(localStorage.getItem(STORAGE_KEY) === 'true', false);
+
+  collapseBtn?.addEventListener('click', () => {
+    const next = sidebar.getAttribute('data-collapsed') !== 'true';
+    applyCollapsed(next);
+    localStorage.setItem(STORAGE_KEY, String(next));
+  });
+
+  // Mobile
+  const openMobile  = () => { sidebar.classList.add('open'); overlay.classList.remove('hidden'); overlay.removeAttribute('aria-hidden'); menuToggle?.setAttribute('aria-expanded', 'true'); };
+  const closeMobile = () => { sidebar.classList.remove('open'); overlay.classList.add('hidden'); overlay.setAttribute('aria-hidden', 'true'); menuToggle?.setAttribute('aria-expanded', 'false'); };
+
+  menuToggle?.addEventListener('click', () => sidebar.classList.contains('open') ? closeMobile() : openMobile());
+  overlay.addEventListener('click', closeMobile);
+  document.addEventListener('keydown', (e) => e.key === 'Escape' && closeMobile());
+</script>

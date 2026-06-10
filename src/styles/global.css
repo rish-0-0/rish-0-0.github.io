@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────────────────────────────────
+   TAILWIND TOKEN REGISTRATION
+   `inline` = utilities emit var() references, not static values.
+   Theme values live in themes.scss — edit there, never here.
+   ───────────────────────────────────────────────────────────────────────── */
+@theme inline {
+  --color-bg:             var(--bg);
+  --color-bg-elevated:    var(--bg-elevated);
+  --color-surface:        var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-border:         var(--border);
+  --color-fg:             var(--fg);
+  --color-fg-muted:       var(--fg-muted);
+  --color-fg-subtle:      var(--fg-subtle);
+  --color-accent:         var(--accent);
+  --color-accent-fg:      var(--accent-fg);
+  --color-sidebar-bg:     var(--sidebar-bg);
+  --color-sidebar-hover:  var(--sidebar-hover);
+  --color-sidebar-active: var(--sidebar-active);
+  --color-input-bg:       var(--input-bg);
+  --color-input-border:   var(--input-border);
+  --color-pill-bg:        var(--pill-bg);
+  --color-pill-border:    var(--pill-border);
+
+  --font-heading: 'Archivo', sans-serif;
+  --font-body:    'Space Grotesk', system-ui, sans-serif;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   BASE
+   ───────────────────────────────────────────────────────────────────────── */
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    transition: background-color .2s, color .2s;
+  }
+
+  ::-webkit-scrollbar       { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--scrollbar); border-radius: 3px; }
+
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+  a { color: var(--accent); text-decoration: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; }
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   SIDEBAR COLLAPSE
+   Data-attribute driven — can't be expressed in Tailwind utilities alone.
+   ───────────────────────────────────────────────────────────────────────── */
+.sidebar {
+  transition: width 0.22s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s ease;
+}
+
+.sidebar[data-collapsed="true"] {
+  width: 56px;
+}
+
+.sidebar[data-collapsed="true"] .sidebar-logo    { display: none; }
+.sidebar[data-collapsed="true"] .sidebar-header  { justify-content: center; padding: 0; }
+.sidebar[data-collapsed="true"] .sidebar-nav     { padding: 12px 4px; }
+.sidebar[data-collapsed="true"] .sidebar-nav-item { justify-content: center; padding: 9px; }
+
+.sidebar[data-collapsed="true"] .sidebar-section-label,
+.sidebar[data-collapsed="true"] .sidebar-nav-label {
+  width: 0; opacity: 0; overflow: hidden; pointer-events: none;
+}
+
+/* Expand fade-in */
+.sidebar:not([data-collapsed="true"]) .sidebar-section-label,
+.sidebar:not([data-collapsed="true"]) .sidebar-nav-label {
+  transition: opacity 0.18s ease 0.08s;
+}
+
+/* Tooltip on icon-only items */
+.sidebar[data-collapsed="true"] .sidebar-nav-item { position: relative; }
+.sidebar[data-collapsed="true"] .sidebar-nav-item::after {
+  content: attr(data-label);
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--fg);
+  white-space: nowrap;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s ease;
+  z-index: 100;
+}
+.sidebar[data-collapsed="true"] .sidebar-nav-item:hover::after { opacity: 1; }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   MOBILE SIDEBAR
+   Overrides collapse state — full-width overlay on small screens.
+   ───────────────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed !important;
+    top: 0; left: 0;
+    height: 100dvh;
+    width: 260px !important;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease !important;
+  }
+  .sidebar.open { transform: translateX(0); }
+
+  .sidebar .sidebar-logo        { display: flex !important; }
+  .sidebar .sidebar-header      { justify-content: space-between !important; padding: 0 12px 0 16px !important; }
+  .sidebar .sidebar-section-label,
+  .sidebar .sidebar-nav-label   { opacity: 1 !important; width: auto !important; pointer-events: auto !important; }
+  .sidebar .sidebar-nav-item    { justify-content: flex-start !important; padding: 8px 10px !important; }
+  .sidebar .sidebar-collapse-btn { display: none; }
+}
