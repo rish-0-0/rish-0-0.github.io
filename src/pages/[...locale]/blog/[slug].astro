@@ -35,7 +35,7 @@ const dateStr = new Intl.DateTimeFormat(locale, {
 }).format(post.data.pubDate);
 ---
 
-<ChatLayout title={post.data.title} description={post.data.description} locale={locale}>
+<ChatLayout title={post.data.title} description={post.data.description} locale={locale} ogType="article" publishedTime={post.data.pubDate.toISOString()}>
   <article>
     <div class="prose">
       <a href={blogUrl} class="back-link">

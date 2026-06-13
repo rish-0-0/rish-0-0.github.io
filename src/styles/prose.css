@@ -17,7 +17,7 @@
 .prose h4,
 .prose h5,
 .prose h6 {
-  font-family: 'Archivo', sans-serif;
+  font-family: var(--font-archivo), sans-serif;
   font-weight: 700;
   color: var(--prose-heading);
   line-height: 1.3;

@@ -24,8 +24,8 @@
   --color-pill-bg:        var(--pill-bg);
   --color-pill-border:    var(--pill-border);
 
-  --font-heading: 'Archivo', sans-serif;
-  --font-body:    'Space Grotesk', system-ui, sans-serif;
+  --font-heading: var(--font-archivo), sans-serif;
+  --font-body:    var(--font-space-grotesk), system-ui, sans-serif;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────

@@ -11,14 +11,16 @@ export interface Props {
   title?: string;
   description?: string;
   locale?: string;
+  ogType?: 'website' | 'article';
+  publishedTime?: string;
 }
 
-const { title, description, locale: localeProp } = Astro.props;
+const { title, description, locale: localeProp, ogType, publishedTime } = Astro.props;
 const locale = localeProp ?? (Astro.params.locale as string | undefined) ?? 'en';
 const strings = t(locale);
 ---
 
-<Base title={title} description={description} lang={locale}>
+<Base title={title} description={description} lang={locale} ogType={ogType} publishedTime={publishedTime}>
   <div class="flex h-dvh overflow-hidden">
     <Sidebar locale={locale} />
 
@@ -37,7 +39,7 @@ const strings = t(locale);
         </button>
 
         <LocaleSwitcher
-          client:load
+          client:idle
           current={locale}
           currentPath={Astro.url.pathname}
           defaultLocale={DEFAULT_LOCALE}
@@ -54,7 +56,7 @@ const strings = t(locale);
         />
 
         <ThemeSwitcher
-          client:load
+          client:idle
           strings={{
             chooseLabel: strings.theme.chooseLabel,
             currentTemplate: strings.theme.currentTemplate,
