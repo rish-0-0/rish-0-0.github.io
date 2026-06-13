@@ -1,0 +1,57 @@
+---
+import { getCollection, render } from 'astro:content';
+import ChatLayout from '../../../layouts/ChatLayout.astro';
+import { t, LOCALES } from '../../../i18n';
+import '../../../styles/prose.css';
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection('blog');
+  const enPosts = allPosts.filter((p) => p.id.startsWith('en/'));
+  const slugs = enPosts.map((p) => p.id.split('/').slice(2).join('/').replace(/\.mdx?$/, ''));
+  return LOCALES.flatMap((locale) =>
+    slugs.map((slug) => ({ params: { locale, slug } }))
+  );
+}
+
+const { locale, slug } = Astro.params;
+const strings = t(locale);
+
+const allPosts = await getCollection('blog');
+const post =
+  allPosts.find((p) => p.id === locale + '/blog/' + slug + '.md') ??
+  allPosts.find((p) => p.id === locale + '/blog/' + slug + '.mdx') ??
+  allPosts.find((p) => p.id === locale + '/blog/' + slug) ??
+  allPosts.find((p) => p.id.startsWith('en/blog/' + slug));
+
+if (!post) return Astro.redirect('/' + locale + '/blog');
+
+const { Content } = await render(post);
+
+const dateStr = new Intl.DateTimeFormat(locale, {
+  year: 'numeric', month: 'long', day: 'numeric',
+}).format(post.data.pubDate);
+---
+
+<ChatLayout title={post.data.title} description={post.data.description} locale={locale}>
+  <article>
+    <div class="prose">
+      <a href={'/' + locale + '/blog'} class="back-link">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 2L4 7l5 5"/>
+        </svg>
+        {strings.blog.backLink}
+      </a>
+
+      <h1>{post.data.title}</h1>
+
+      <div class="post-meta">
+        <time datetime={post.data.pubDate.toISOString()}>{dateStr}</time>
+        {post.data.tags?.map((tag) => (
+          <span class="post-tag">{tag}</span>
+        ))}
+      </div>
+
+      <Content />
+    </div>
+  </article>
+</ChatLayout>

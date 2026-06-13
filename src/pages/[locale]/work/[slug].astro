@@ -1,0 +1,82 @@
+---
+import { getCollection, render } from 'astro:content';
+import ChatLayout from '../../../layouts/ChatLayout.astro';
+import { t, LOCALES } from '../../../i18n';
+import '../../../styles/prose.css';
+
+export async function getStaticPaths() {
+  const allProjects = await getCollection('work');
+  const enProjects = allProjects.filter((p) => p.id.startsWith('en/'));
+  const slugs = enProjects.map((p) => p.id.split('/').slice(2).join('/').replace(/\.mdx?$/, ''));
+  return LOCALES.flatMap((locale) =>
+    slugs.map((slug) => ({ params: { locale, slug } }))
+  );
+}
+
+const { locale, slug } = Astro.params;
+const strings = t(locale);
+
+const allProjects = await getCollection('work');
+const project =
+  allProjects.find((p) => p.id === locale + '/work/' + slug + '.md') ??
+  allProjects.find((p) => p.id === locale + '/work/' + slug + '.mdx') ??
+  allProjects.find((p) => p.id === locale + '/work/' + slug) ??
+  allProjects.find((p) => p.id.startsWith('en/work/' + slug));
+
+if (!project) return Astro.redirect('/' + locale + '/work');
+
+const { Content } = await render(project);
+
+const dateStr = new Intl.DateTimeFormat(locale, {
+  year: 'numeric', month: 'long',
+}).format(project.data.pubDate);
+---
+
+<ChatLayout title={project.data.title} description={project.data.description} locale={locale}>
+  <article>
+    <div class="prose">
+      <a href={'/' + locale + '/work'} class="back-link">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 2L4 7l5 5"/>
+        </svg>
+        {strings.work.backLink}
+      </a>
+
+      <h1>{project.data.title}</h1>
+
+      <div class="post-meta">
+        <time datetime={project.data.pubDate.toISOString()}>{dateStr}</time>
+        {project.data.tags?.map((tag) => (
+          <span class="post-tag">{tag}</span>
+        ))}
+        {project.data.url && (
+          <a href={project.data.url} target="_blank" rel="noopener noreferrer" class="live-link">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+              <path d="M1 11L11 1M11 1H5M11 1v6"/>
+            </svg>
+            {project.data.linkLabel ?? strings.work.liveSite}
+          </a>
+        )}
+      </div>
+
+      <Content />
+    </div>
+  </article>
+</ChatLayout>
+
+<style>
+  .live-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.8125rem;
+    color: var(--accent);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .live-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+</style>

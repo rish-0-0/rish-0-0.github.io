@@ -1,17 +1,3 @@
 ---
-import ChatLayout from '../layouts/ChatLayout.astro';
-import SearchBar from '../components/SearchBar';
+return Astro.redirect('/en/');
 ---
-
-<ChatLayout title="Portfolio" description="Personal portfolio - work, writing, and more.">
-  <div class="flex min-h-[calc(100dvh-57px)] flex-col items-center justify-center gap-8 px-6 pb-20 pt-10">
-    <div class="flex flex-col items-center gap-2.5 text-center">
-      <h1 class="font-heading text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-tight tracking-tight text-fg">
-        What would you like to explore?
-      </h1>
-      <p class="text-base text-fg-muted">Browse my work, read the blog, or just say hi.</p>
-    </div>
-
-    <SearchBar client:load />
-  </div>
-</ChatLayout>

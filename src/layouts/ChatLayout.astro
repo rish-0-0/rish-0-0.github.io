@@ -2,27 +2,32 @@
 import Base from './Base.astro';
 import Sidebar from '../components/Sidebar.astro';
 import ThemeSwitcher from '../components/ThemeSwitcher';
+import LocaleSwitcher from '../components/LocaleSwitcher';
+import { t, LOCALES } from '../i18n';
 import '../styles/themes.scss';
 import '../styles/global.css';
 
 export interface Props {
   title?: string;
   description?: string;
+  locale?: string;
 }
 
-const { title, description } = Astro.props;
+const { title, description, locale: localeProp } = Astro.props;
+const locale = localeProp ?? (Astro.params.locale as string | undefined) ?? 'en';
+const strings = t(locale);
 ---
 
-<Base title={title} description={description}>
+<Base title={title} description={description} lang={locale}>
   <div class="flex h-dvh overflow-hidden">
-    <Sidebar />
+    <Sidebar locale={locale} />
 
     <div class="flex flex-1 flex-col overflow-hidden bg-bg">
       <header class="h-[57px] flex items-center justify-end shrink-0 px-6 gap-2 border-b border-border">
         <button
           id="menu-toggle"
           class="menu-toggle hidden items-center justify-center p-1 rounded-md border-none bg-transparent text-fg-muted hover:text-fg hover:bg-surface transition-colors"
-          aria-label="Open navigation"
+          aria-label={strings.nav.openNavigation}
           aria-expanded="false"
           aria-controls="sidebar"
         >
@@ -31,7 +36,35 @@ const { title, description } = Astro.props;
           </svg>
         </button>
 
-        <ThemeSwitcher client:load />
+        <LocaleSwitcher
+          client:load
+          current={locale}
+          currentPath={Astro.url.pathname}
+          chooseLabel={strings.localeSwitcher.chooseLabel}
+          currentTemplate={strings.localeSwitcher.currentTemplate}
+          locales={[
+            { code: 'en', label: 'English',    nativeLabel: 'English' },
+            { code: 'hi', label: 'Hindi',      nativeLabel: 'हिन्दी' },
+            { code: 'es', label: 'Spanish',    nativeLabel: 'Español' },
+            { code: 'fr', label: 'French',     nativeLabel: 'Français' },
+            { code: 'de', label: 'German',     nativeLabel: 'Deutsch' },
+            { code: 'nl', label: 'Dutch',      nativeLabel: 'Nederlands' },
+          ]}
+        />
+
+        <ThemeSwitcher
+          client:load
+          strings={{
+            chooseLabel: strings.theme.chooseLabel,
+            currentTemplate: strings.theme.currentTemplate,
+            themes: {
+              dark: strings.theme.dark,
+              light: strings.theme.light,
+              solarized: strings.theme.solarized,
+              aderberry: strings.theme.aderberry,
+            },
+          }}
+        />
       </header>
 
       <main class="flex-1 overflow-y-auto" id="main-content" tabindex="-1">

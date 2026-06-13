@@ -1,0 +1,49 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import ChatLayout from '../../layouts/ChatLayout.astro';
+import SearchBar from '../../components/SearchBar';
+import { t, LOCALES } from '../../i18n';
+
+export function getStaticPaths() {
+  return LOCALES.map((locale) => ({ params: { locale } }));
+}
+
+const { locale } = Astro.params;
+const strings = t(locale);
+
+const suggestions = [
+  { label: strings.search.suggestionWork,    href: getRelativeLocaleUrl(locale, 'work') },
+  { label: strings.search.suggestionBlog,    href: getRelativeLocaleUrl(locale, 'blog') },
+  { label: strings.search.suggestionAbout,   href: getRelativeLocaleUrl(locale, 'about') },
+  { label: strings.search.suggestionContact, href: getRelativeLocaleUrl(locale, 'contact') },
+];
+---
+
+<ChatLayout title={strings.meta.siteTitle} description={strings.meta.siteDescription} locale={locale}>
+  <div class="flex min-h-[calc(100dvh-57px)] flex-col items-center justify-around gap-8 px-6">
+    <div class="flex flex-col gap-8">
+      <div class="flex flex-col text-center">
+        <h1 class="font-heading text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-tight tracking-tight text-fg">
+          {strings.home.greeting}
+        </h1>
+        <p class="text-base text-fg-muted">{strings.home.prompt}</p>
+      </div>
+
+      <SearchBar
+        client:load
+        searchIndexUrl={'/' + locale + '/search-index.json'}
+        strings={{
+          placeholder: strings.search.placeholder,
+          clearLabel: strings.search.clearLabel,
+          inputLabel: strings.search.inputLabel,
+          quickNavLabel: strings.search.quickNavLabel,
+          resultSingular: strings.search.resultSingular,
+          resultPlural: strings.search.resultPlural,
+          noResultsTemplate: strings.search.noResultsTemplate,
+        }}
+        suggestions={suggestions}
+      />
+    </div>
+    <div class="spacer" />
+  </div>
+</ChatLayout>

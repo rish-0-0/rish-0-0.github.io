@@ -6,22 +6,35 @@ interface SearchEntry {
   title: string;
   description: string;
   url: string;
-  // Pre-lowercased for efficient repeated matching
   _title: string;
   _description: string;
 }
 
-const SUGGESTIONS = [
-  { label: 'Show me your work', href: '/work' },
-  { label: 'Read the blog',     href: '/blog' },
-  { label: 'About you',         href: '/about' },
-  { label: 'Get in touch',      href: '/contact' },
-];
+export interface SearchBarStrings {
+  placeholder: string;
+  clearLabel: string;
+  inputLabel: string;
+  quickNavLabel: string;
+  resultSingular: string;
+  resultPlural: string;
+  noResultsTemplate: string;
+}
+
+interface Suggestion {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  searchIndexUrl: string;
+  strings: SearchBarStrings;
+  suggestions: Suggestion[];
+}
 
 const match = (e: SearchEntry, q: string) =>
   e._title.includes(q) || e._description.includes(q) || e.type.includes(q);
 
-export default function SearchBar() {
+export default function SearchBar({ searchIndexUrl, strings, suggestions }: Props) {
   const [query,     setQuery]     = useState('');
   const [index,     setIndex]     = useState<SearchEntry[]>([]);
   const [results,   setResults]   = useState<SearchEntry[]>([]);
@@ -30,7 +43,7 @@ export default function SearchBar() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    fetch('/search-index.json')
+    fetch(searchIndexUrl)
       .then((r) => r.json())
       .then((entries) => setIndex(entries.map((e: Omit<SearchEntry, '_title' | '_description'>) => ({
         ...e,
@@ -38,7 +51,7 @@ export default function SearchBar() {
         _description: e.description.toLowerCase(),
       }))))
       .catch(() => {});
-  }, []);
+  }, [searchIndexUrl]);
 
   useEffect(() => {
     if (query.trim().length < 2) { setResults([]); setActiveIdx(-1); return; }
@@ -49,7 +62,7 @@ export default function SearchBar() {
   const navigate = (url: string) => { window.location.href = url; };
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    const items = results.length > 0 ? results.map((r) => r.url) : SUGGESTIONS.map((s) => s.href);
+    const items = results.length > 0 ? results.map((r) => r.url) : suggestions.map((s) => s.href);
     if      (e.key === 'ArrowDown')          { e.preventDefault(); setActiveIdx((i) => Math.min(i + 1, items.length - 1)); }
     else if (e.key === 'ArrowUp')            { e.preventDefault(); setActiveIdx((i) => Math.max(i - 1, -1)); }
     else if (e.key === 'Enter' && !e.shiftKey) {
@@ -58,9 +71,15 @@ export default function SearchBar() {
       else if (query.trim().length >= 2 && results.length > 0) navigate(results[0].url);
     }
     else if (e.key === 'Escape') { setQuery(''); setFocused(false); inputRef.current?.blur(); }
-  }, [results, activeIdx, query]);
+  }, [results, activeIdx, query, suggestions]);
 
   const showDropdown = focused && (results.length > 0 || query.length === 0);
+
+  const resultsLabel = results.length === 1
+    ? `1 ${strings.resultSingular}`
+    : `${results.length} ${strings.resultPlural}`;
+
+  const noResultsLabel = strings.noResultsTemplate.replace('{q}', query);
 
   return (
     <div class="flex w-full max-w-[680px] flex-col gap-4">
@@ -73,21 +92,21 @@ export default function SearchBar() {
         <textarea
           ref={inputRef}
           class="field-sizing-content min-h-6 max-h-40 flex-1 resize-none overflow-y-auto border-none bg-transparent text-base leading-relaxed text-fg outline-none placeholder:text-fg-subtle"
-          placeholder="Ask me anything…"
+          placeholder={strings.placeholder}
           rows={1}
           value={query}
           onInput={(e) => setQuery((e.target as HTMLTextAreaElement).value)}
           onFocus={() => setFocused(true)}
           onBlur={() => setTimeout(() => setFocused(false), 150)}
           onKeyDown={handleKeyDown as any}
-          aria-label="Search or navigate"
+          aria-label={strings.inputLabel}
           spellcheck={false}
         />
         {query && (
           <button
             class="mt-0.5 flex shrink-0 items-center rounded bg-transparent p-1 text-fg-subtle transition-colors hover:bg-surface hover:text-fg"
             onClick={() => { setQuery(''); inputRef.current?.focus(); }}
-            aria-label="Clear search"
+            aria-label={strings.clearLabel}
           >
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
               <path d="M2 2l10 10M12 2L2 12"/>
@@ -101,8 +120,8 @@ export default function SearchBar() {
         <div class="overflow-hidden rounded-xl border border-border bg-surface-raised shadow-[var(--shadow)] animate-in fade-in slide-in-from-top-1 duration-150">
           {query.trim().length < 2 ? (
             <>
-              <p class="px-3.5 pb-1.5 pt-2.5 text-[0.6875rem] font-semibold uppercase tracking-widest text-fg-subtle">Quick navigation</p>
-              {SUGGESTIONS.map((s, i) => (
+              <p class="px-3.5 pb-1.5 pt-2.5 text-[0.6875rem] font-semibold uppercase tracking-widest text-fg-subtle">{strings.quickNavLabel}</p>
+              {suggestions.map((s, i) => (
                 <a key={s.href} href={s.href} class={`flex items-center gap-2.5 px-3.5 py-2.5 text-sm no-underline transition-colors ${activeIdx === i ? 'bg-sidebar-hover text-fg' : 'text-fg-muted hover:bg-sidebar-hover hover:text-fg'}`}>
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M3 7h8M7.5 3.5L11 7l-3.5 3.5"/>
@@ -114,7 +133,7 @@ export default function SearchBar() {
           ) : results.length > 0 ? (
             <>
               <p class="px-3.5 pb-1.5 pt-2.5 text-[0.6875rem] font-semibold uppercase tracking-widest text-fg-subtle">
-                {results.length} result{results.length !== 1 ? 's' : ''}
+                {resultsLabel}
               </p>
               {results.map((r, i) => (
                 <a key={r.url} href={r.url} class={`flex items-center gap-2.5 px-3.5 py-2.5 no-underline transition-colors ${activeIdx === i ? 'bg-sidebar-hover' : 'hover:bg-sidebar-hover'}`}>
@@ -127,14 +146,14 @@ export default function SearchBar() {
               ))}
             </>
           ) : (
-            <p class="px-3.5 py-4 text-sm italic text-fg-muted">No results for "{query}"</p>
+            <p class="px-3.5 py-4 text-sm italic text-fg-muted">{noResultsLabel}</p>
           )}
         </div>
       )}
 
       {/* Suggestion pills */}
-      <div class="flex flex-wrap gap-2" aria-label="Suggestions">
-        {SUGGESTIONS.map((s) => (
+      <div class="flex flex-wrap gap-2" aria-label={strings.quickNavLabel}>
+        {suggestions.map((s) => (
           <a key={s.href} href={s.href} class="whitespace-nowrap rounded-full border border-pill-border bg-pill-bg px-4 py-1.5 text-sm font-medium text-fg-muted no-underline transition-colors hover:border-accent hover:bg-pill-bg hover:text-fg">
             {s.label}
           </a>

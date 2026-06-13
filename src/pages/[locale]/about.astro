@@ -1,0 +1,37 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import ChatLayout from '../../layouts/ChatLayout.astro';
+import { t, LOCALES } from '../../i18n';
+import '../../styles/prose.css';
+
+export function getStaticPaths() {
+  return LOCALES.map((locale) => ({ params: { locale } }));
+}
+
+const { locale } = Astro.params;
+const strings = t(locale);
+
+const currently = strings.about.currently
+  .replace('{workUrl}', getRelativeLocaleUrl(locale, 'work'))
+  .replace('{blogUrl}', getRelativeLocaleUrl(locale, 'blog'));
+
+const getInTouch = strings.about.getInTouch
+  .replace('{contactUrl}', getRelativeLocaleUrl(locale, 'contact'));
+---
+
+<ChatLayout title={strings.about.title} description={strings.about.description} locale={locale}>
+  <div class="prose">
+    <h1>{strings.about.title}</h1>
+
+    <p set:html={strings.about.intro} />
+
+    <h2>{strings.about.whatIDoTitle}</h2>
+    <p>{strings.about.whatIDo}</p>
+
+    <h2>{strings.about.currentlyTitle}</h2>
+    <p set:html={currently} />
+
+    <h2>{strings.about.getInTouchTitle}</h2>
+    <p set:html={getInTouch} />
+  </div>
+</ChatLayout>

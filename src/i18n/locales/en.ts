@@ -1,0 +1,86 @@
+const en = {
+  meta: {
+    siteTitle: 'Portfolio',
+    siteDescription: 'Personal portfolio - work, writing, and more.',
+  },
+  nav: {
+    chat: 'Chat',
+    sectionLabel: 'Explore',
+    blog: 'Blog',
+    work: 'Work',
+    about: 'About',
+    contact: 'Contact',
+    collapseSidebar: 'Collapse sidebar',
+    expandSidebar: 'Expand sidebar',
+    siteNavLabel: 'Site navigation',
+    mainNavLabel: 'Main navigation',
+    openNavigation: 'Open navigation',
+  },
+  home: {
+    greeting: "Hi, I'm Rishabh",
+    prompt: 'What would you like to know about me?',
+  },
+  contact: {
+    title: 'Contact',
+    description: 'Get in touch.',
+    body: 'The best way to reach me is by email. I read everything.',
+    responseTime: 'Response time is usually within a day or two.',
+  },
+  about: {
+    title: 'About',
+    description: 'A bit about me.',
+    intro: "Hi - I'm <strong>Rishabh Anand</strong>, an engineer who genuinely loves this stuff. The moment an idea turns into something working on a screen still feels like magic to me, and I've never quite gotten over it. I sweat the details most people never notice - the spacing, the half-second of latency, the exact word in a button - because that's where good software quietly earns people's trust.",
+    whatIDoTitle: 'What I do',
+    whatIDo: "I build at the intersection of design and engineering, and I like to own a problem end to end - from the first rough sketch to the thing that actually ships and holds up in production. I'm happiest when I'm diving deep into how something really works rather than skimming the surface, and I have a strong bias for action: I'd rather build a rough version today and learn from it than debate it for a week. I hold my work to a high standard, but I care even more about the person on the other side of the screen.",
+    currentlyTitle: 'Currently',
+    currently: "I'm focused on the thing I care about most right now: figuring out how to leverage AI to build for the greater good - tools that make people's lives genuinely easier, more accessible, and more humane, not just flashier. I think big about where this technology can take us, and I want to be one of the people making sure it lands somewhere worth going. You can browse my <a href=\"{workUrl}\">selected work</a> or read what I've been thinking about on the <a href=\"{blogUrl}\">blog</a>.",
+    getInTouchTitle: 'Get in touch',
+    getInTouch: 'Always happy to talk - reach out via the <a href="{contactUrl}">contact page</a>.',
+  },
+  blog: {
+    title: 'Blog',
+    description: 'Writing on design, engineering, and ideas.',
+    subtitle: 'Thoughts on design, engineering, and things in between.',
+    empty: 'No posts yet - check back soon.',
+    backLink: 'All posts',
+  },
+  work: {
+    title: 'Work',
+    description: 'Selected projects and case studies.',
+    subtitle: 'Selected projects - click any to read more.',
+    empty: 'No projects yet - check back soon.',
+    backLink: 'All projects',
+    liveSite: 'Live site',
+  },
+  search: {
+    placeholder: 'Ask me anything…',
+    clearLabel: 'Clear search',
+    inputLabel: 'Search or navigate',
+    quickNavLabel: 'Quick navigation',
+    resultSingular: 'result',
+    resultPlural: 'results',
+    noResultsTemplate: 'No results for "{q}"',
+    suggestionWork: 'Show me your work',
+    suggestionBlog: 'Read the blog',
+    suggestionAbout: 'About you',
+    suggestionContact: 'Get in touch',
+  },
+  theme: {
+    chooseLabel: 'Choose theme',
+    currentTemplate: 'Current theme: {theme}. Change theme',
+    dark: 'Dark',
+    light: 'Light',
+    solarized: 'Solarized',
+    aderberry: 'Aderberry',
+  },
+  postCard: {
+    liveSite: 'Live site',
+  },
+  localeSwitcher: {
+    chooseLabel: 'Choose language',
+    currentTemplate: 'Current language: {locale}. Change language',
+  },
+} as const;
+
+export default en;
+export type Translations = typeof en;

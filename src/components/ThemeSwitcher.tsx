@@ -2,6 +2,12 @@ import { useState, useEffect } from 'preact/hooks';
 
 type Theme = 'dark' | 'light' | 'solarized' | 'aderberry';
 
+export interface ThemeSwitcherStrings {
+  chooseLabel: string;
+  currentTemplate: string;
+  themes: { dark: string; light: string; solarized: string; aderberry: string };
+}
+
 // ── Theme icons ───────────────────────────────────────────────────────────────
 
 const IconMoon = () => (
@@ -16,7 +22,6 @@ const IconSun = () => (
   </svg>
 );
 
-// Solarized: annular solar eclipse — sun corona ring with short rays
 const IconEclipse = () => (
   <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
     <path fill-rule="evenodd" d="M8 3.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zM2 8a6 6 0 1 1 12 0A6 6 0 0 1 2 8zm6 1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
@@ -24,7 +29,6 @@ const IconEclipse = () => (
   </svg>
 );
 
-// Aderberry: raspberry — 6 drupelets in a triangular cluster + stem
 const IconRaspberry = () => (
   <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
     <circle cx="4"  cy="5"  r="2.1"/>
@@ -39,18 +43,24 @@ const IconRaspberry = () => (
 
 // ── Theme config ──────────────────────────────────────────────────────────────
 
-const THEMES: { id: Theme; label: string; icon: () => JSX.Element }[] = [
-  { id: 'dark',      label: 'Dark',      icon: IconMoon      },
-  { id: 'light',     label: 'Light',     icon: IconSun       },
-  { id: 'aderberry', label: 'Aderberry', icon: IconRaspberry },
-  { id: 'solarized', label: 'Solarized', icon: IconEclipse   },
-];
+const THEME_ICONS: Record<Theme, () => JSX.Element> = {
+  dark:      IconMoon,
+  light:     IconSun,
+  aderberry: IconRaspberry,
+  solarized: IconEclipse,
+};
+
+const THEME_IDS: Theme[] = ['dark', 'light', 'aderberry', 'solarized'];
 
 const STORAGE_KEY = 'portfolio-theme';
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export default function ThemeSwitcher() {
+interface Props {
+  strings: ThemeSwitcherStrings;
+}
+
+export default function ThemeSwitcher({ strings }: Props) {
   const [current, setCurrent] = useState<Theme>('dark');
   const [open, setOpen]       = useState(false);
 
@@ -66,7 +76,8 @@ export default function ThemeSwitcher() {
     setOpen(false);
   };
 
-  const CurrentIcon = THEMES.find((t) => t.id === current)!.icon;
+  const CurrentIcon = THEME_ICONS[current];
+  const currentLabel = strings.currentTemplate.replace('{theme}', strings.themes[current] ?? current);
 
   return (
     <div class="relative">
@@ -75,7 +86,7 @@ export default function ThemeSwitcher() {
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        aria-label={`Current theme: ${current}. Change theme`}
+        aria-label={currentLabel}
       >
         <CurrentIcon />
       </button>
@@ -86,24 +97,28 @@ export default function ThemeSwitcher() {
           <ul
             class="absolute top-[calc(100%+8px)] right-0 z-50 min-w-[152px] list-none rounded-xl border border-border bg-surface-raised p-1 shadow-[var(--shadow)] animate-in fade-in slide-in-from-top-2 duration-150"
             role="listbox"
-            aria-label="Choose theme"
+            aria-label={strings.chooseLabel}
           >
-            {THEMES.map(({ id, label, icon: Icon }) => (
-              <li key={id} role="option" aria-selected={id === current}>
-                <button
-                  class={`flex w-full items-center gap-2.5 rounded-md border-none bg-transparent px-2.5 py-2 text-left text-sm font-medium transition-colors hover:bg-sidebar-hover hover:text-fg ${id === current ? 'text-accent' : 'text-fg-muted'}`}
-                  onClick={() => apply(id)}
-                >
-                  <Icon />
-                  {label}
-                  {id === current && (
-                    <svg class="ml-auto" width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
-                      <path d="M10 3L5 8.5 2 5.5l-1 1 4 4 6-7z"/>
-                    </svg>
-                  )}
-                </button>
-              </li>
-            ))}
+            {THEME_IDS.map((id) => {
+              const Icon = THEME_ICONS[id];
+              const label = strings.themes[id] ?? id;
+              return (
+                <li key={id} role="option" aria-selected={id === current}>
+                  <button
+                    class={`flex w-full items-center gap-2.5 rounded-md border-none bg-transparent px-2.5 py-2 text-left text-sm font-medium transition-colors hover:bg-sidebar-hover hover:text-fg ${id === current ? 'text-accent' : 'text-fg-muted'}`}
+                    onClick={() => apply(id)}
+                  >
+                    <Icon />
+                    {label}
+                    {id === current && (
+                      <svg class="ml-auto" width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
+                        <path d="M10 3L5 8.5 2 5.5l-1 1 4 4 6-7z"/>
+                      </svg>
+                    )}
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         </>
       )}

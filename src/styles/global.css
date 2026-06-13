@@ -3,7 +3,7 @@
 /* ─────────────────────────────────────────────────────────────────────────
    TAILWIND TOKEN REGISTRATION
    `inline` = utilities emit var() references, not static values.
-   Theme values live in themes.scss — edit there, never here.
+   Theme values live in themes.scss - edit there, never here.
    ───────────────────────────────────────────────────────────────────────── */
 @theme inline {
   --color-bg:             var(--bg);
@@ -58,7 +58,7 @@
 
 /* ─────────────────────────────────────────────────────────────────────────
    SIDEBAR COLLAPSE
-   Data-attribute driven — can't be expressed in Tailwind utilities alone.
+   Data-attribute driven - can't be expressed in Tailwind utilities alone.
    ───────────────────────────────────────────────────────────────────────── */
 .sidebar {
   transition: width 0.22s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s ease;
@@ -110,7 +110,7 @@
 
 /* ─────────────────────────────────────────────────────────────────────────
    MOBILE SIDEBAR
-   Overrides collapse state — full-width overlay on small screens.
+   Overrides collapse state - full-width overlay on small screens.
    ───────────────────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .sidebar {

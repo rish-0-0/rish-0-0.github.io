@@ -7,16 +7,20 @@ export interface Props {
   tags?: string[];
   /** Show only month+year instead of day+month+year */
   shortDate?: boolean;
-  /** Optional live-site URL — renders an external link badge */
+  /** Optional live-site URL - renders an external link badge */
   liveUrl?: string;
+  /** BCP 47 locale tag for date formatting */
+  locale?: string;
+  /** Translated label for the live site badge */
+  liveSiteLabel?: string;
 }
 
-const { href, title, description, pubDate, tags, shortDate = false, liveUrl } = Astro.props;
+const { href, title, description, pubDate, tags, shortDate = false, liveUrl, locale = 'en', liveSiteLabel = 'Live site' } = Astro.props;
 
-const dateStr = pubDate.toLocaleDateString('en-GB', shortDate
+const dateStr = new Intl.DateTimeFormat(locale, shortDate
   ? { year: 'numeric', month: 'short' }
   : { year: 'numeric', month: 'short', day: 'numeric' }
-);
+).format(pubDate);
 ---
 
 <a
@@ -43,7 +47,7 @@ const dateStr = pubDate.toLocaleDateString('en-GB', shortDate
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
         <path d="M1 11L11 1M11 1H5M11 1v6"/>
       </svg>
-      Live site
+      {liveSiteLabel}
     </span>
   )}
 </a>

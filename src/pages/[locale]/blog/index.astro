@@ -1,0 +1,50 @@
+---
+import { getCollection } from 'astro:content';
+import ChatLayout from '../../../layouts/ChatLayout.astro';
+import PostCard from '../../../components/PostCard.astro';
+import { t, LOCALES } from '../../../i18n';
+
+export function getStaticPaths() {
+  return LOCALES.map((locale) => ({ params: { locale } }));
+}
+
+const { locale } = Astro.params;
+const strings = t(locale);
+
+// IDs: "en/blog/building-in-public.md" - strip locale + type + extension
+const toSlug = (id: string) => id.split('/').slice(2).join('/').replace(/\.mdx?$/, '');
+
+const allPosts = await getCollection('blog');
+const posts = allPosts
+  .filter((p) => p.id.startsWith(locale + '/'))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .map((p) => ({ ...p, slug: toSlug(p.id) }));
+---
+
+<ChatLayout title={strings.blog.title} description={strings.blog.description} locale={locale}>
+  <div class="max-w-3xl p-10">
+    <header class="mb-9">
+      <h1 class="font-heading text-3xl font-bold tracking-tight text-fg">{strings.blog.title}</h1>
+      <p class="mt-2 text-fg-muted">{strings.blog.subtitle}</p>
+    </header>
+
+    {posts.length === 0 ? (
+      <p class="italic text-fg-muted">{strings.blog.empty}</p>
+    ) : (
+      <ul class="flex flex-col gap-3" role="list">
+        {posts.map((post) => (
+          <li>
+            <PostCard
+              href={'/' + locale + '/blog/' + post.slug}
+              title={post.data.title}
+              description={post.data.description}
+              pubDate={post.data.pubDate}
+              tags={post.data.tags}
+              locale={locale}
+            />
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+</ChatLayout>
