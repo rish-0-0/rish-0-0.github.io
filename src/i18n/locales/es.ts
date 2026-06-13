@@ -66,6 +66,12 @@ const es: Translations = {
     suggestionBlog: 'Leer el blog',
     suggestionAbout: 'Sobre ti',
     suggestionContact: 'Ponte en contacto',
+    keywords: {
+      work: 'trabajo proyectos portafolio portfolio casos estudios apps ingeniería',
+      blog: 'blog escritura artículos publicaciones notas ensayos pensamientos',
+      about: 'sobre acerca biografía historia quién experiencia habilidades',
+      contact: 'contacto correo email mensaje contratar conectar colaborar hola',
+    },
   },
   theme: {
     chooseLabel: 'Elegir tema',

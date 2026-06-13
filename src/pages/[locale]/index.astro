@@ -42,6 +42,12 @@ const suggestions = [
           noResultsTemplate: strings.search.noResultsTemplate,
         }}
         suggestions={suggestions}
+        fallback={{
+          type: strings.nav.contact,
+          title: strings.contact.title,
+          description: strings.contact.description,
+          url: getRelativeLocaleUrl(locale, 'contact'),
+        }}
       />
     </div>
     <div class="spacer" />

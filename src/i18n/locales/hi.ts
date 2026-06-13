@@ -66,6 +66,12 @@ const hi: Translations = {
     suggestionBlog: 'ब्लॉग पढ़ें',
     suggestionAbout: 'आपके बारे में',
     suggestionContact: 'संपर्क करें',
+    keywords: {
+      work: 'काम परियोजनाएं प्रोजेक्ट पोर्टफोलियो work projects portfolio',
+      blog: 'ब्लॉग लेखन लेख पोस्ट विचार blog writing',
+      about: 'परिचय बायो कहानी अनुभव कौशल about bio',
+      contact: 'संपर्क ईमेल संदेश काम पर रखें contact email',
+    },
   },
   theme: {
     chooseLabel: 'थीम चुनें',

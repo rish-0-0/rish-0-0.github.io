@@ -64,6 +64,12 @@ const en = {
     suggestionBlog: 'Read the blog',
     suggestionAbout: 'About you',
     suggestionContact: 'Get in touch',
+    keywords: {
+      work: 'work projects portfolio case studies builds engineering apps',
+      blog: 'blog writing posts articles thoughts notes essays',
+      about: 'about bio background story who experience skills journey',
+      contact: 'contact email reach message hire connect collaborate hello',
+    },
   },
   theme: {
     chooseLabel: 'Choose theme',

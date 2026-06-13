@@ -66,6 +66,12 @@ const de: Translations = {
     suggestionBlog: 'Den Blog lesen',
     suggestionAbout: 'Über dich',
     suggestionContact: 'In Kontakt treten',
+    keywords: {
+      work: 'arbeit projekte portfolio fallstudien entwicklung apps',
+      blog: 'blog schreiben artikel beiträge gedanken notizen essays',
+      about: 'über bio hintergrund geschichte wer erfahrung fähigkeiten',
+      contact: 'kontakt email nachricht erreichen einstellen verbinden',
+    },
   },
   theme: {
     chooseLabel: 'Thema wählen',

@@ -66,6 +66,12 @@ const nl: Translations = {
     suggestionBlog: 'Lees de blog',
     suggestionAbout: 'Over jou',
     suggestionContact: 'Neem contact op',
+    keywords: {
+      work: 'werk projecten portfolio casestudies bouwen engineering apps',
+      blog: 'blog schrijven artikelen berichten gedachten notities',
+      about: 'over bio achtergrond verhaal wie ervaring vaardigheden',
+      contact: 'contact email bericht bereiken inhuren verbinden',
+    },
   },
   theme: {
     chooseLabel: 'Thema kiezen',

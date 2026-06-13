@@ -1,13 +1,20 @@
 import { useState, useEffect, useRef, useCallback } from 'preact/hooks';
 
 interface SearchEntry {
-  type: 'blog' | 'work';
+  type: string;
   slug: string;
   title: string;
   description: string;
   url: string;
-  _title: string;
-  _description: string;
+  keywords?: string;
+  _haystack: string;
+}
+
+export interface SearchFallback {
+  type: string;
+  title: string;
+  description: string;
+  url: string;
 }
 
 export interface SearchBarStrings {
@@ -29,12 +36,13 @@ interface Props {
   searchIndexUrl: string;
   strings: SearchBarStrings;
   suggestions: Suggestion[];
+  fallback: SearchFallback;
 }
 
-const match = (e: SearchEntry, q: string) =>
-  e._title.includes(q) || e._description.includes(q) || e.type.includes(q);
+const tokenize = (q: string) =>
+  q.toLowerCase().split(/\s+/).filter((tok) => tok.length >= 2);
 
-export default function SearchBar({ searchIndexUrl, strings, suggestions }: Props) {
+export default function SearchBar({ searchIndexUrl, strings, suggestions, fallback }: Props) {
   const [query,     setQuery]     = useState('');
   const [index,     setIndex]     = useState<SearchEntry[]>([]);
   const [results,   setResults]   = useState<SearchEntry[]>([]);
@@ -45,35 +53,46 @@ export default function SearchBar({ searchIndexUrl, strings, suggestions }: Prop
   useEffect(() => {
     fetch(searchIndexUrl)
       .then((r) => r.json())
-      .then((entries) => setIndex(entries.map((e: Omit<SearchEntry, '_title' | '_description'>) => ({
+      .then((entries) => setIndex(entries.map((e: Omit<SearchEntry, '_haystack'>) => ({
         ...e,
-        _title: e.title.toLowerCase(),
-        _description: e.description.toLowerCase(),
+        _haystack: `${e.title} ${e.description} ${e.type} ${e.keywords ?? ''}`.toLowerCase(),
       }))))
       .catch(() => {});
   }, [searchIndexUrl]);
 
   useEffect(() => {
-    if (query.trim().length < 2) { setResults([]); setActiveIdx(-1); return; }
-    setResults(index.filter((e) => match(e, query.trim().toLowerCase())).slice(0, 6));
+    const tokens = tokenize(query.trim());
+    if (tokens.length === 0) { setResults([]); setActiveIdx(-1); return; }
+    // Rank by how many query tokens an entry matches; keep the strongest 6.
+    const ranked = index
+      .map((e) => ({ e, score: tokens.reduce((n, tok) => n + (e._haystack.includes(tok) ? 1 : 0), 0) }))
+      .filter((x) => x.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 6)
+      .map((x) => x.e);
+    setResults(ranked);
     setActiveIdx(-1);
   }, [query, index]);
 
   const navigate = (url: string) => { window.location.href = url; };
 
+  const hasQuery = query.trim().length >= 2;
+
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    const items = results.length > 0 ? results.map((r) => r.url) : suggestions.map((s) => s.href);
+    const items = hasQuery
+      ? (results.length > 0 ? results.map((r) => r.url) : [fallback.url])
+      : suggestions.map((s) => s.href);
     if      (e.key === 'ArrowDown')          { e.preventDefault(); setActiveIdx((i) => Math.min(i + 1, items.length - 1)); }
     else if (e.key === 'ArrowUp')            { e.preventDefault(); setActiveIdx((i) => Math.max(i - 1, -1)); }
     else if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       if (activeIdx >= 0) navigate(items[activeIdx]);
-      else if (query.trim().length >= 2 && results.length > 0) navigate(results[0].url);
+      else if (items.length > 0) navigate(items[0]);
     }
     else if (e.key === 'Escape') { setQuery(''); setFocused(false); inputRef.current?.blur(); }
-  }, [results, activeIdx, query, suggestions]);
+  }, [results, activeIdx, hasQuery, suggestions, fallback]);
 
-  const showDropdown = focused && (results.length > 0 || query.length === 0);
+  const showDropdown = focused && (hasQuery || query.length === 0);
 
   const resultsLabel = results.length === 1
     ? `1 ${strings.resultSingular}`
@@ -146,7 +165,16 @@ export default function SearchBar({ searchIndexUrl, strings, suggestions }: Prop
               ))}
             </>
           ) : (
-            <p class="px-3.5 py-4 text-sm italic text-fg-muted">{noResultsLabel}</p>
+            <>
+              <p class="px-3.5 pb-1.5 pt-3 text-sm italic text-fg-muted">{noResultsLabel}</p>
+              <a href={fallback.url} onMouseDown={(e) => e.preventDefault()} class={`flex items-center gap-2.5 px-3.5 py-2.5 no-underline transition-colors ${activeIdx === 0 ? 'bg-sidebar-hover' : 'hover:bg-sidebar-hover'}`}>
+                <span class="shrink-0 rounded border border-border bg-pill-bg px-1.5 py-px text-[0.6875rem] font-semibold uppercase tracking-wide text-accent">{fallback.type}</span>
+                <span class="flex min-w-0 flex-col gap-px">
+                  <span class="truncate text-sm font-medium text-fg">{fallback.title}</span>
+                  <span class="truncate text-xs text-fg-muted">{fallback.description}</span>
+                </span>
+              </a>
+            </>
           )}
         </div>
       )}

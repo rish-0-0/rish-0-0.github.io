@@ -66,6 +66,12 @@ const fr: Translations = {
     suggestionBlog: 'Lire le blog',
     suggestionAbout: 'À votre sujet',
     suggestionContact: 'Prendre contact',
+    keywords: {
+      work: 'travail projets portfolio études de cas réalisations ingénierie',
+      blog: 'blog écriture articles publications notes pensées essais',
+      about: 'à propos bio parcours histoire qui expérience compétences',
+      contact: 'contact email courriel message embaucher connecter collaborer',
+    },
   },
   theme: {
     chooseLabel: 'Choisir un thème',
