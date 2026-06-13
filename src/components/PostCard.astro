@@ -25,7 +25,7 @@ const dateStr = new Intl.DateTimeFormat(locale, shortDate
 
 <a
   href={href}
-  class="block rounded-xl border border-border bg-surface p-5 no-underline transition-all hover:border-fg-subtle hover:bg-surface-raised hover:shadow-[var(--shadow)]"
+  class="flex h-full flex-col rounded-xl border border-border bg-surface p-5 no-underline transition-all hover:border-fg-subtle hover:bg-surface-raised hover:shadow-[var(--shadow)]"
 >
   <div class="mb-2 flex flex-wrap items-center gap-2 text-[0.8125rem] text-fg-muted">
     <time datetime={pubDate.toISOString()}>{dateStr}</time>
@@ -43,7 +43,7 @@ const dateStr = new Intl.DateTimeFormat(locale, shortDate
   <p class="text-sm leading-relaxed text-fg-muted">{description}</p>
 
   {liveUrl && (
-    <span class="mt-3 inline-flex items-center gap-1.5 text-[0.8125rem] font-medium text-accent">
+    <span class="mt-auto pt-3 inline-flex items-center gap-1.5 text-[0.8125rem] font-medium text-accent">
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
         <path d="M1 11L11 1M11 1H5M11 1v6"/>
       </svg>

@@ -21,7 +21,7 @@ Temporal orquesta los flujos de trabajo, y Redis actúa como capa de caché fren
 
 ## Extracción sin ser bloqueado
 
-Los listados se recopilan con **Puppeteer** controlando un navegador headless. Los scrapers pasan desapercibidos mediante rate limiting y retardos en las solicitudes, rotación de user-agents y simulación de navegador headless — distribuyendo la carga entre portales para que ninguna fuente se sature.
+Los listados se recopilan con **Puppeteer** controlando un navegador headless. Los scrapers pasan desapercibidos mediante rate limiting y retardos en las solicitudes, rotación de user-agents y simulación de navegador headless - distribuyendo la carga entre portales para que ninguna fuente se sature.
 
 ## Enriquecimiento con IA
 
@@ -31,11 +31,11 @@ Cada empleo se enriquece y se vectoriza para la búsqueda semántica:
 - La generación **text-to-SQL** permite consultar los datos en lenguaje natural.
 - El **caché de consultas** en Redis reduce el gasto repetido de tokens del LLM.
 
-Durante el desarrollo el pipeline usa un modelo local de **Ollama** (coste de LLM cero). En producción el coste escala según el modelo elegido — enriquecer 50.000 empleos son unos 140M de tokens de entrada, desde ~25 $ con GPT-4o mini hasta ~600 $ con Claude Sonnet.
+Durante el desarrollo el pipeline usa un modelo local de **Ollama** (coste de LLM cero). En producción el coste escala según el modelo elegido - enriquecer 50.000 empleos son unos 140M de tokens de entrada, desde ~25 $ con GPT-4o mini hasta ~600 $ con Claude Sonnet.
 
 ## Diseñado para escalar a más de 1M de registros
 
-La arquitectura escala horizontalmente por diseño: RabbitMQ gestiona la contrapresión, Temporal coordina el trabajo distribuido, los consumidores se ejecutan como múltiples réplicas, y la indexación de pgvector junto al caché de resultados en Redis mantienen las consultas rápidas bajo carga. Todo el sistema se levanta con un solo comando — `docker compose up -d --build` pone en marcha la base de datos, el broker de mensajes, el motor de flujos, la caché, el LLM local, la API y el frontend a la vez.
+La arquitectura escala horizontalmente por diseño: RabbitMQ gestiona la contrapresión, Temporal coordina el trabajo distribuido, los consumidores se ejecutan como múltiples réplicas, y la indexación de pgvector junto al caché de resultados en Redis mantienen las consultas rápidas bajo carga. Todo el sistema se levanta con un solo comando - `docker compose up -d --build` pone en marcha la base de datos, el broker de mensajes, el motor de flujos, la caché, el LLM local, la API y el frontend a la vez.
 
 ## Stack
 

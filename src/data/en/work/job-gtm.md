@@ -21,7 +21,7 @@ Temporal orchestrates the workflows, and Redis sits in front of the expensive op
 
 ## Scraping without getting blocked
 
-Listings are collected with **Puppeteer** driving a headless browser. The scrapers stay under the radar with rate limiting and request delays, user-agent rotation, and headless browser simulation — distributing the load across boards so no single source gets hammered.
+Listings are collected with **Puppeteer** driving a headless browser. The scrapers stay under the radar with rate limiting and request delays, user-agent rotation, and headless browser simulation - distributing the load across boards so no single source gets hammered.
 
 ## AI enrichment
 
@@ -31,11 +31,11 @@ Each job is enriched and embedded for semantic search:
 - **Text-to-SQL** generation lets users query the dataset in natural language.
 - **Query caching** in Redis cuts down on repeated LLM token spend.
 
-During development the pipeline runs against a local **Ollama** model (zero LLM cost). In production the cost scales with the chosen model — enriching 50,000 jobs is roughly 140M input tokens, ranging from ~$25 on GPT-4o mini to ~$600 on Claude Sonnet.
+During development the pipeline runs against a local **Ollama** model (zero LLM cost). In production the cost scales with the chosen model - enriching 50,000 jobs is roughly 140M input tokens, ranging from ~$25 on GPT-4o mini to ~$600 on Claude Sonnet.
 
 ## Built to scale to 1M+ records
 
-The architecture scales horizontally by design: RabbitMQ provides backpressure handling, Temporal coordinates distributed work, consumers run as multiple replicas, and pgvector indexing plus Redis result caching keep queries fast under load. The whole system comes up with a single command — `docker compose up -d --build` brings the database, message broker, workflow engine, cache, local LLM, API, and frontend online together.
+The architecture scales horizontally by design: RabbitMQ provides backpressure handling, Temporal coordinates distributed work, consumers run as multiple replicas, and pgvector indexing plus Redis result caching keep queries fast under load. The whole system comes up with a single command - `docker compose up -d --build` brings the database, message broker, workflow engine, cache, local LLM, API, and frontend online together.
 
 ## Stack
 
