@@ -1,16 +1,16 @@
 import type { APIRoute, GetStaticPaths } from 'astro';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { getCollection } from 'astro:content';
-import { LOCALES, t } from '../../i18n';
+import { LOCALES, t, localeParam, DEFAULT_LOCALE } from '../../i18n';
 
 export const getStaticPaths: GetStaticPaths = () => {
-  return LOCALES.map((locale) => ({ params: { locale } }));
+  return LOCALES.map((locale) => ({ params: { locale: localeParam(locale) } }));
 };
 
 const toSlug = (id: string) => id.split('/').slice(2).join('/').replace(/\.mdx?$/, '');
 
 export const GET: APIRoute = async ({ params }) => {
-  const locale = params.locale ?? 'en';
+  const locale = params.locale ?? DEFAULT_LOCALE;
   const strings = t(locale);
 
   const [allPosts, allWorks] = await Promise.all([
@@ -40,7 +40,7 @@ export const GET: APIRoute = async ({ params }) => {
         slug,
         title: p.data.title,
         description: p.data.description,
-        url: '/' + locale + '/blog/' + slug,
+        url: getRelativeLocaleUrl(locale, 'blog/' + slug),
         keywords: (p.data.tags ?? []).join(' '),
       };
     }),
@@ -51,7 +51,7 @@ export const GET: APIRoute = async ({ params }) => {
         slug,
         title: w.data.title,
         description: w.data.description,
-        url: '/' + locale + '/work/' + slug,
+        url: getRelativeLocaleUrl(locale, 'work/' + slug),
         keywords: (w.data.tags ?? []).join(' '),
       };
     }),

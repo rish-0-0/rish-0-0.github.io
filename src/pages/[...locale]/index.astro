@@ -2,13 +2,13 @@
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import ChatLayout from '../../layouts/ChatLayout.astro';
 import SearchBar from '../../components/SearchBar';
-import { t, LOCALES } from '../../i18n';
+import { t, LOCALES, localeParam, DEFAULT_LOCALE } from '../../i18n';
 
 export function getStaticPaths() {
-  return LOCALES.map((locale) => ({ params: { locale } }));
+  return LOCALES.map((locale) => ({ params: { locale: localeParam(locale) } }));
 }
 
-const { locale } = Astro.params;
+const locale = Astro.params.locale ?? DEFAULT_LOCALE;
 const strings = t(locale);
 
 const suggestions = [
@@ -31,7 +31,7 @@ const suggestions = [
 
       <SearchBar
         client:load
-        searchIndexUrl={'/' + locale + '/search-index.json'}
+        searchIndexUrl={getRelativeLocaleUrl(locale, 'search-index.json')}
         strings={{
           placeholder: strings.search.placeholder,
           clearLabel: strings.search.clearLabel,

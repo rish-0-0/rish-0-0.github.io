@@ -1,14 +1,15 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import { getCollection } from 'astro:content';
 import ChatLayout from '../../../layouts/ChatLayout.astro';
 import PostCard from '../../../components/PostCard.astro';
-import { t, LOCALES } from '../../../i18n';
+import { t, LOCALES, localeParam, DEFAULT_LOCALE } from '../../../i18n';
 
 export function getStaticPaths() {
-  return LOCALES.map((locale) => ({ params: { locale } }));
+  return LOCALES.map((locale) => ({ params: { locale: localeParam(locale) } }));
 }
 
-const { locale } = Astro.params;
+const locale = Astro.params.locale ?? DEFAULT_LOCALE;
 const strings = t(locale);
 
 // IDs: "en/work/this-portfolio.md" - strip locale + type + extension
@@ -35,7 +36,7 @@ const projects = allProjects
         {projects.map((project) => (
           <li>
             <PostCard
-              href={'/' + locale + '/work/' + project.slug}
+              href={getRelativeLocaleUrl(locale, 'work/' + project.slug)}
               title={project.data.title}
               description={project.data.description}
               pubDate={project.data.pubDate}

@@ -1,7 +1,8 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import { getCollection, render } from 'astro:content';
 import ChatLayout from '../../../layouts/ChatLayout.astro';
-import { t, LOCALES } from '../../../i18n';
+import { t, LOCALES, localeParam, DEFAULT_LOCALE } from '../../../i18n';
 import '../../../styles/prose.css';
 
 export async function getStaticPaths() {
@@ -9,12 +10,14 @@ export async function getStaticPaths() {
   const enProjects = allProjects.filter((p) => p.id.startsWith('en/'));
   const slugs = enProjects.map((p) => p.id.split('/').slice(2).join('/').replace(/\.mdx?$/, ''));
   return LOCALES.flatMap((locale) =>
-    slugs.map((slug) => ({ params: { locale, slug } }))
+    slugs.map((slug) => ({ params: { locale: localeParam(locale), slug } }))
   );
 }
 
-const { locale, slug } = Astro.params;
+const { slug } = Astro.params;
+const locale = Astro.params.locale ?? DEFAULT_LOCALE;
 const strings = t(locale);
+const workUrl = getRelativeLocaleUrl(locale, 'work');
 
 const allProjects = await getCollection('work');
 const project =
@@ -23,7 +26,7 @@ const project =
   allProjects.find((p) => p.id === locale + '/work/' + slug) ??
   allProjects.find((p) => p.id.startsWith('en/work/' + slug));
 
-if (!project) return Astro.redirect('/' + locale + '/work');
+if (!project) return Astro.redirect(workUrl);
 
 const { Content } = await render(project);
 
@@ -35,7 +38,7 @@ const dateStr = new Intl.DateTimeFormat(locale, {
 <ChatLayout title={project.data.title} description={project.data.description} locale={locale}>
   <article>
     <div class="prose">
-      <a href={'/' + locale + '/work'} class="back-link">
+      <a href={workUrl} class="back-link">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M9 2L4 7l5 5"/>
         </svg>

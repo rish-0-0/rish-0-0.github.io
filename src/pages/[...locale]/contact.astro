@@ -1,13 +1,13 @@
 ---
 import ChatLayout from '../../layouts/ChatLayout.astro';
-import { t, LOCALES } from '../../i18n';
+import { t, LOCALES, localeParam, DEFAULT_LOCALE } from '../../i18n';
 import '../../styles/prose.css';
 
 export function getStaticPaths() {
-  return LOCALES.map((locale) => ({ params: { locale } }));
+  return LOCALES.map((locale) => ({ params: { locale: localeParam(locale) } }));
 }
 
-const { locale } = Astro.params;
+const locale = Astro.params.locale ?? DEFAULT_LOCALE;
 const strings = t(locale);
 ---
 

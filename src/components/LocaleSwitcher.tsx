@@ -10,17 +10,23 @@ interface Props {
   current: string;
   currentPath: string;
   locales: LocaleOption[];
+  defaultLocale: string;
   chooseLabel: string;
   currentTemplate: string;
 }
 
-export default function LocaleSwitcher({ current, currentPath, locales, chooseLabel, currentTemplate }: Props) {
+export default function LocaleSwitcher({ current, currentPath, locales, defaultLocale, chooseLabel, currentTemplate }: Props) {
   const [open, setOpen] = useState(false);
 
-  // Swap the locale segment in the current path: /en/blog → /fr/blog
+  // Swap the locale prefix. The default locale is served at the root with no
+  // prefix, so strip an existing non-default prefix and only add one for
+  // non-default targets: /work → /fr/work, /es/blog → /blog.
   const switchTo = (code: string) => {
     const parts = currentPath.split('/').filter(Boolean);
-    parts[0] = code;
+    if (parts[0] && parts[0] !== defaultLocale && locales.some((l) => l.code === parts[0])) {
+      parts.shift();
+    }
+    if (code !== defaultLocale) parts.unshift(code);
     return '/' + parts.join('/');
   };
 
