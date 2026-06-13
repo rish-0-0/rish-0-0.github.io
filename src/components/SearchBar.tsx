@@ -122,7 +122,7 @@ export default function SearchBar({ searchIndexUrl, strings, suggestions }: Prop
             <>
               <p class="px-3.5 pb-1.5 pt-2.5 text-[0.6875rem] font-semibold uppercase tracking-widest text-fg-subtle">{strings.quickNavLabel}</p>
               {suggestions.map((s, i) => (
-                <a key={s.href} href={s.href} class={`flex items-center gap-2.5 px-3.5 py-2.5 text-sm no-underline transition-colors ${activeIdx === i ? 'bg-sidebar-hover text-fg' : 'text-fg-muted hover:bg-sidebar-hover hover:text-fg'}`}>
+                <a key={s.href} href={s.href} onMouseDown={(e) => e.preventDefault()} class={`flex items-center gap-2.5 px-3.5 py-2.5 text-sm no-underline transition-colors ${activeIdx === i ? 'bg-sidebar-hover text-fg' : 'text-fg-muted hover:bg-sidebar-hover hover:text-fg'}`}>
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M3 7h8M7.5 3.5L11 7l-3.5 3.5"/>
                   </svg>
@@ -136,7 +136,7 @@ export default function SearchBar({ searchIndexUrl, strings, suggestions }: Prop
                 {resultsLabel}
               </p>
               {results.map((r, i) => (
-                <a key={r.url} href={r.url} class={`flex items-center gap-2.5 px-3.5 py-2.5 no-underline transition-colors ${activeIdx === i ? 'bg-sidebar-hover' : 'hover:bg-sidebar-hover'}`}>
+                <a key={r.url} href={r.url} onMouseDown={(e) => e.preventDefault()} class={`flex items-center gap-2.5 px-3.5 py-2.5 no-underline transition-colors ${activeIdx === i ? 'bg-sidebar-hover' : 'hover:bg-sidebar-hover'}`}>
                   <span class="shrink-0 rounded border border-border bg-pill-bg px-1.5 py-px text-[0.6875rem] font-semibold uppercase tracking-wide text-accent">{r.type}</span>
                   <span class="flex min-w-0 flex-col gap-px">
                     <span class="truncate text-sm font-medium text-fg">{r.title}</span>
