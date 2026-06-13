@@ -5,6 +5,8 @@ import preact from '@astrojs/preact';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
+  outDir: './docs',
+
   integrations: [preact({ compat: false })],
 
   i18n: {
