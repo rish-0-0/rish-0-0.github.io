@@ -11,6 +11,10 @@ export function getStaticPaths() {
 const locale = Astro.params.locale ?? DEFAULT_LOCALE;
 const strings = t(locale);
 
+// getRelativeLocaleUrl appends a trailing slash (page-route assumption); the
+// search index is a file, so strip it: /search-index.json (not .../json/).
+const searchIndexUrl = getRelativeLocaleUrl(locale, 'search-index.json').replace(/\/$/, '');
+
 const suggestions = [
   { label: strings.search.suggestionWork,    href: getRelativeLocaleUrl(locale, 'work') },
   { label: strings.search.suggestionBlog,    href: getRelativeLocaleUrl(locale, 'blog') },
@@ -31,7 +35,7 @@ const suggestions = [
 
       <SearchBar
         client:load
-        searchIndexUrl={getRelativeLocaleUrl(locale, 'search-index.json')}
+        searchIndexUrl={searchIndexUrl}
         strings={{
           placeholder: strings.search.placeholder,
           clearLabel: strings.search.clearLabel,
