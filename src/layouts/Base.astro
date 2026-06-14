@@ -50,6 +50,7 @@ const alternates = LOCALES.map((loc) => ({
 const xDefault = getAbsoluteLocaleUrl(DEFAULT_LOCALE, logicalPath);
 
 const ogImageUrl = ogImage ? new URL(ogImage, SITE.url).href : null;
+const ogLogoUrl = SITE.logo ? new URL(SITE.logo, SITE.url).href : null;
 
 // JSON-LD structured data: Person on the homepage, Article on posts/work.
 const isHome = logicalPath === '/';
@@ -105,6 +106,7 @@ const jsonLd = ogType === 'article'
       <meta property="og:locale:alternate" content={OG_LOCALE[l] ?? l} />
     ))}
     {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+    {ogLogoUrl && <meta property="og:logo" content={ogLogoUrl} />}
     {ogType === 'article' && publishedTime && (
       <meta property="article:published_time" content={publishedTime} />
     )}

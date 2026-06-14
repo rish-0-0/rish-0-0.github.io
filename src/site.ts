@@ -15,6 +15,12 @@ export const SITE = {
    * SVG OG images. Leave null to omit og:image entirely.
    */
   ogImage: '/life.jpg' as string | null,
+  /**
+   * Brand logo, served from /public. Emitted as og:logo and JSON-LD logo.
+   * Note: og:logo is non-standard OG; og:image is what social platforms use.
+   * Leave null to omit. Replace favicon.svg with a real logo when available.
+   */
+  logo: '/logo.png' as string | null,
   /** Twitter/X handle (without @), or null. Used for twitter:site/creator. */
   twitter: null as string | null,
 } as const;
